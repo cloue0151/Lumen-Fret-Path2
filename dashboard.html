@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumen Fret Path - Dashboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html, body {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    body {
+        background-color: #f4f5f8;
+        color: #2b303b;
+        font-family: "Montserrat", sans-serif;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: #ffffff;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 32px;
+        border-bottom: 1px solid #eaeef2;
+        z-index: 1000;
+    }
+
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .brand-logo-link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+
+    .brand-logo-img {
+        height: 40px;
+        width: auto;
+        display: block;
+        object-fit: contain;
+    }
+
+    .nav-center-pill {
+        display: flex;
+        align-items: center;
+        background: #f1f3f9;
+        padding: 4px;
+        border-radius: 30px;
+        gap: 4px;
+    }
+
+    .nav-link {
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #718096;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .nav-link:hover {
+        color: #2b303b;
+    }
+
+    .nav-link.active {
+        background: #ffffff;
+        color: #1a1f2c;
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .action-btn {
+        background: #1a1f2c;
+        color: white;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.2s, transform 0.2s;
+    }
+
+    .action-btn:hover {
+        background: #2d3748;
+        transform: translateY(-1px);
+    }
+
+    .logout-btn {
+        background: #fee2e2;
+        color: #b91c1c;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+    }
+
+    .logout-btn:hover {
+        background: #fecaca;
+        transform: translateY(-1px);
+    }
+
+    .page-transition-wrapper {
+        margin-top: 72px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 72px);
+        overflow: hidden;
+        opacity: 0;
+        transform: translateX(0);
+        transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .page-transition-wrapper.page-loaded {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .page-transition-wrapper.slide-left-in {
+        opacity: 0;
+        transform: translateX(35px);
+    }
+
+    .page-transition-wrapper.slide-right-in {
+        opacity: 0;
+        transform: translateX(-35px);
+    }
+
+    .page-transition-wrapper.slide-left-out {
+        opacity: 0;
+        transform: translateX(-35px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .page-transition-wrapper.slide-right-out {
+        opacity: 0;
+        transform: translateX(35px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .main-content {
+        padding: 24px 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 1600px;
+        margin: 0 auto;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .welcome-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(135deg, #ffffff 0%, #f3eefd 100%);
+        padding: 20px 24px;
+        border-radius: 20px;
+        border: 1px solid #e9d8fd;
+        box-shadow: 0 4px 15px rgba(108, 92, 231, 0.05);
+    }
+
+    .welcome-text h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a1f2c;
+    }
+
+    .welcome-text p {
+        font-size: 14px;
+        color: #6c5ce7;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+
+    .streak-badge {
+        background: #fef08a;
+        color: #854d0e;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid #fef08a;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 20px;
+        flex: 1;
+        min-height: 0;
+    }
+
+    .progress-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .progress-card h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1a1f2c;
+    }
+
+    .progress-item {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        background: #f8fafc;
+        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid #eaeef2;
+    }
+
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .progress-bar-bg {
+        width: 100%;
+        height: 8px;
+        background: #edf2f7;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.4s ease;
+    }
+
+    .fill-purple { background: linear-gradient(90deg, #6c5ce7, #a29bfe); }
+    .fill-pink { background: linear-gradient(90deg, #db2777, #f472b6); }
+    .fill-yellow { background: linear-gradient(90deg, #ca8a04, #eab308); }
+
+    .encouragement-msg {
+        font-size: 11px;
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .msg-purple { color: #6c5ce7; }
+    .msg-pink { color: #db2777; }
+    .msg-yellow { color: #ca8a04; }
+
+    .small-calendar-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .calendar-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .calendar-title-area h2 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1a1f2c;
+    }
+
+    .calendar-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .cal-btn {
+        background: #f4f5f8;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 11px;
+        color: #2b303b;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+    }
+
+    .cal-btn:hover { background: #e2e8f0; }
+    .cal-btn:active { transform: scale(0.97); }
+
+    .cal-btn.primary {
+        background: #6c5ce7;
+        color: white;
+    }
+
+    .cal-btn.primary:hover {
+        background: #5b4bc4;
+    }
+
+    .cal-btn.danger {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .cal-btn.danger:hover {
+        background: #fecaca;
+    }
+
+    .weekdays-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        font-size: 11px;
+        font-weight: 600;
+        color: #a0aec0;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #eaeef2;
+    }
+
+    .days-grid-interactive {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+        overflow-y: auto;
+        padding-right: 4px;
+        flex: 1;
+    }
+
+    .days-grid-interactive::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .days-grid-interactive::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+    .day-cell {
+        background: #f8fafc;
+        border: 1px solid #eaeef2;
+        border-radius: 10px;
+        padding: 6px;
+        min-height: 65px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .day-cell:hover {
+        border-color: #6c5ce7;
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(108, 92, 231, 0.1);
+    }
+
+    .day-cell.muted {
+        opacity: 0.4;
+        background: #f1f5f9;
+    }
+
+    .day-cell-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: #2b303b;
+    }
+
+    .day-events-container {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        overflow-y: auto;
+        max-height: 40px;
+    }
+
+    .event-chip {
+        font-size: 9px;
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .event-chip.purple {
+        background: #f3eefd;
+        color: #6c5ce7;
+        border-left: 2px solid #6c5ce7;
+    }
+
+    .event-chip.pink {
+        background: #fdf2f8;
+        color: #db2777;
+        border-left: 2px solid #db2777;
+    }
+
+    .event-chip.yellow {
+        background: #fef08a;
+        color: #854d0e;
+        border-left: 2px solid #ca8a04;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.4);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1100;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+        opacity: 1;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 24px;
+        border-radius: 20px;
+        width: 380px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+
+    .modal-content h3 {
+        font-size: 15px;
+        font-weight: 700;
+        color: #1a1f2c;
+    }
+
+    .modal-input, .modal-select {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 13px;
+        outline: none;
+        background: #fff;
+    }
+
+    .existing-events-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: 120px;
+        overflow-y: auto;
+    }
+
+    .existing-event-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 10px;
+        background: #f8fafc;
+        border-radius: 8px;
+        border: 1px solid #eaeef2;
+        font-size: 12px;
+    }
+
+    .delete-event-btn {
+        background: none;
+        border: none;
+        color: #ef4444;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .delete-event-btn:hover {
+        background: #fee2e2;
+    }
+
+    .modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="nav-left">
+            <a href="dashboard.html" class="brand-logo-link">
+                <img src="lfplogo.png" alt="lumen fret path logo" class="brand-logo-img">
+            </a>
+        </div>
+        <nav class="nav-center-pill">
+            <a href="dashboard.html" class="nav-link active" data-index="0">Dashboard</a>
+            <a href="lessons.html" class="nav-link" data-index="1">Lessons</a>
+            <a href="quiz.html" class="nav-link" data-index="2">Quizzes</a>
+            <a href="community.html" class="nav-link" data-index="4">Community</a>
+        </nav>
+        <div class="nav-right">
+            <a href="lesson.html" class="action-btn">Take Practice</a>
+            <button id="logout-btn" class="logout-btn">Logout</button>
+        </div>
+    </header>
+
+    <div class="page-transition-wrapper" id="transition-wrapper">
+        <main class="main-content">
+            
+            <div class="welcome-header">
+                <div class="welcome-text">
+                    <h1>Hello, welcome back!</h1>
+                    <p>Keep the momentum going—you are making great progress!</p>
+                </div>
+                <div class="streak-badge" id="streak-badge-el">
+                    0 Day Streak!
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                
+                <section class="progress-card">
+                    <h3>Overall Progress</h3>
+                    
+                    <div class="progress-item">
+                        <div class="progress-info">
+                            <span>Fretboard Mastery</span>
+                            <span id="mastery-val">0%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-purple" id="mastery-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="encouragement-msg msg-purple" id="mastery-msg">Start taking quizzes to build mastery!</span>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-info">
+                            <span>Completed Lessons</span>
+                            <span id="lessons-val">0 / 20</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-pink" id="lessons-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="encouragement-msg msg-pink" id="lessons-msg">Complete your first lesson today!</span>
+                    </div>
+
+                    <div class="progress-item">
+                        <div class="progress-info">
+                            <span>Weekly Practice Goal</span>
+                            <span id="weekly-val">0 / 5 Days</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-yellow" id="weekly-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="encouragement-msg msg-yellow" id="weekly-msg">Practice regularly to reach your weekly goal!</span>
+                    </div>
+                </section>
+
+                <section class="small-calendar-card">
+                    <div class="calendar-header-row">
+                        <div class="calendar-title-area">
+                            <h2 id="calendar-month-title">September 2026</h2>
+                        </div>
+                        <div class="calendar-controls">
+                            <button class="cal-btn" id="prev-month">◀</button>
+                            <button class="cal-btn" id="next-month">▶</button>
+                            <button class="cal-btn primary" id="calendar-add-btn">+ Add Session</button>
+                        </div>
+                    </div>
+
+                    <div class="weekdays-grid">
+                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                    </div>
+
+                    <div class="days-grid-interactive" id="calendar-days-grid">
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="event-modal">
+        <div class="modal-content">
+            <h3>Manage Practice Session</h3>
+            <input type="date" id="event-date-input" class="modal-input">
+            
+            <div id="existing-events-container" class="existing-events-list"></div>
+
+            <input type="text" id="event-title-input" class="modal-input" placeholder="Session Title (e.g. Scale Practice)">
+            <select id="event-type-input" class="modal-select">
+                <option value="purple">Purple Tag (Practice)</option>
+                <option value="pink">Pink Tag (Lesson)</option>
+                <option value="yellow">Yellow Tag (Goal / Milestone)</option>
+            </select>
+            <div class="modal-buttons">
+                <button class="cal-btn" id="close-modal">Cancel</button>
+                <button class="cal-btn primary" id="save-event">Save Session</button>
+            </div>
+        </div>
+    </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAN7QOLIIz_E47yKvdsneq1MATe4_a92vE",
+        authDomain: "lfp2-e5f32.firebaseapp.com",
+        projectId: "lfp2-e5f32",
+        storageBucket: "lfp2-e5f32.firebasestorage.app",
+        messagingSenderId: "441259212354",
+        appId: "1:441259212354:web:cb6832265e4bbbfea1f7db",
+        measurementId: "G-L3TXJ2Q75N"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const logoutBtn = document.getElementById("logout-btn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", async () => {
+            try {
+                await signOut(auth);
+                localStorage.removeItem("isLoggedIn");
+                window.location.href = "login.html";
+            } catch (error) {
+                console.error("Error signing out: ", error);
+            }
+        });
+    }
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const userRef = doc(db, "users", user.uid);
+            onSnapshot(userRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    updateDashboardProgress(docSnap.data());
+                }
+            });
+        }
+    });
+
+    function updateDashboardProgress(data) {
+        const scores = data.quizScores || [];
+        const masteryPercent = scores.length 
+            ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) 
+            : 0;
+
+        const completedCount = (data.completedLessons || []).length;
+        const totalLessons = data.totalLessons || 20;
+        const lessonsPercent = Math.min(Math.round((completedCount / totalLessons) * 100), 100);
+
+        const activeDaysThisWeek = getDaysPracticedThisWeek(data.practiceDates || []);
+        const weeklyGoal = 5;
+        const weeklyPercent = Math.min(Math.round((activeDaysThisWeek / weeklyGoal) * 100), 100);
+
+        document.getElementById("mastery-val").textContent = `${masteryPercent}%`;
+        document.getElementById("mastery-bar").style.width = `${masteryPercent}%`;
+        
+        document.getElementById("lessons-val").textContent = `${completedCount} / ${totalLessons}`;
+        document.getElementById("lessons-bar").style.width = `${lessonsPercent}%`;
+        
+        document.getElementById("weekly-val").textContent = `${activeDaysThisWeek} / ${weeklyGoal} Days`;
+        document.getElementById("weekly-bar").style.width = `${weeklyPercent}%`;
+
+        if (masteryPercent > 70) {
+            document.getElementById("mastery-msg").textContent = "Amazing control! You are mastering the fretboard.";
+        } else if (masteryPercent > 30) {
+            document.getElementById("mastery-msg").textContent = "You are getting closer to total mastery!";
+        } else {
+            document.getElementById("mastery-msg").textContent = "Keep going! Practice makes perfect.";
+        }
+
+        if (activeDaysThisWeek >= weeklyGoal) {
+            document.getElementById("weekly-msg").textContent = "Goal reached for this week! Great job!";
+        } else {
+            document.getElementById("weekly-msg").textContent = `${weeklyGoal - activeDaysThisWeek} more day(s) to hit your weekly goal!`;
+        }
+
+        const streak = data.streak || activeDaysThisWeek;
+        document.getElementById("streak-badge-el").textContent = `${streak} Day Streak!`;
+    }
+
+    function getDaysPracticedThisWeek(practiceDates) {
+        const now = new Date();
+        const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        const activeDays = new Set(
+            practiceDates.filter(dateStr => new Date(dateStr) >= startOfWeek)
+        );
+        return activeDays.size;
+    }
+
+    // Page Transitions
+    const pageOrder = {
+        'dashboard.html': 0,
+        'lesson.html': 1,
+        'quiz.html': 2,
+        'videos.html': 3,
+        'community.html': 4,
+        'login.html': 5
+    };
+
+    const wrapper = document.getElementById('transition-wrapper');
+
+    window.addEventListener('pageshow', () => {
+        const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+        const currentIndex = pageOrder[currentPage] !== undefined ? pageOrder[currentPage] : 0;
+        const prevIndex = parseInt(sessionStorage.getItem('lastPageIndex')) || 0;
+
+        wrapper.classList.remove('slide-left-out', 'slide-right-out');
+
+        if (currentIndex > prevIndex) {
+            wrapper.classList.add('slide-left-in');
+        } else if (currentIndex < prevIndex) {
+            wrapper.classList.add('slide-right-in');
+        }
+
+        requestAnimationFrame(() => {
+            wrapper.classList.remove('slide-left-in', 'slide-right-in');
+            wrapper.classList.add('page-loaded');
+        });
+
+        sessionStorage.setItem('lastPageIndex', currentIndex);
+    });
+
+    document.querySelectorAll('a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetUrl = this.getAttribute('href');
+            if (targetUrl && !targetUrl.startsWith('#') && targetUrl !== 'javascript:void(0);') {
+                const targetPage = targetUrl.split('/').pop();
+                const currentPage = window.location.pathname.split('/').pop() || 'dashboard.html';
+                
+                const currentIndex = pageOrder[currentPage] !== undefined ? pageOrder[currentPage] : 0;
+                const targetIndex = pageOrder[targetPage] !== undefined ? pageOrder[targetPage] : 0;
+
+                e.preventDefault();
+                wrapper.classList.remove('page-loaded');
+
+                if (targetIndex > currentIndex) {
+                    wrapper.classList.add('slide-left-out');
+                } else {
+                    wrapper.classList.add('slide-right-out');
+                }
+
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 280);
+            }
+        });
+    });
+
+    // Dynamic Calendar with LocalStorage Persistence
+    let currentDate = new Date(2026, 8, 15);
+    let eventsData = JSON.parse(localStorage.getItem('lfp_calendar_events')) || {};
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    const titleEl = document.getElementById('calendar-month-title');
+    const gridEl = document.getElementById('calendar-days-grid');
+    const modal = document.getElementById('event-modal');
+    const prevBtn = document.getElementById('prev-month');
+    const nextBtn = document.getElementById('next-month');
+    const calAddBtn = document.getElementById('calendar-add-btn');
+    const closeModalBtn = document.getElementById('close-modal');
+    const saveEventBtn = document.getElementById('save-event');
+    const dateInput = document.getElementById('event-date-input');
+    const titleInput = document.getElementById('event-title-input');
+    const typeInput = document.getElementById('event-type-input');
+    const existingEventsContainer = document.getElementById('existing-events-container');
+
+    let selectedDateStr = "";
+
+    function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+
+        titleEl.textContent = `${monthNames[month]} ${year}`;
+        gridEl.innerHTML = '';
+
+        const firstDayIndex = new Date(year, month, 1).getDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        const prevTotalDays = new Date(year, month, 0).getDate();
+
+        for (let i = firstDayIndex - 1; i >= 0; i--) {
+            const dayNum = prevTotalDays - i;
+            const cell = createDayCell(dayNum, true);
+            gridEl.appendChild(cell);
+        }
+
+        for (let i = 1; i <= totalDays; i++) {
+            const mm = String(month + 1).padStart(2, '0');
+            const dd = String(i).padStart(2, '0');
+            const dateStr = `${year}-${mm}-${dd}`;
+            const cell = createDayCell(i, false, dateStr);
+            gridEl.appendChild(cell);
+        }
+
+        const totalCellsSoFar = firstDayIndex + totalDays;
+        const remainingCells = totalCellsSoFar <= 35 ? 35 - totalCellsSoFar : 42 - totalCellsSoFar;
+        for (let i = 1; i <= remainingCells; i++) {
+            const cell = createDayCell(i, true);
+            gridEl.appendChild(cell);
+        }
+    }
+
+    function createDayCell(dayNum, isMuted, dateStr = "") {
+        const cell = document.createElement('div');
+        cell.className = `day-cell ${isMuted ? 'muted' : ''}`;
+
+        let eventsHtml = '';
+        if (dateStr && eventsData[dateStr]) {
+            eventsData[dateStr].forEach(ev => {
+                eventsHtml += `<div class="event-chip ${ev.type}">${ev.title}</div>`;
+            });
+        }
+
+        cell.innerHTML = `
+            <div class="day-cell-header">
+                <span>${dayNum}</span>
+            </div>
+            <div class="day-events-container">
+                ${eventsHtml}
+            </div>
+        `;
+
+        if (dateStr) {
+            cell.addEventListener('click', () => {
+                selectedDateStr = dateStr;
+                dateInput.value = dateStr;
+                titleInput.value = '';
+                renderExistingEvents(dateStr);
+                openModal();
+            });
+        }
+
+        return cell;
+    }
+
+    function renderExistingEvents(dateStr) {
+        existingEventsContainer.innerHTML = '';
+        const list = eventsData[dateStr] || [];
+
+        if (list.length === 0) {
+            existingEventsContainer.style.display = 'none';
+            return;
+        }
+
+        existingEventsContainer.style.display = 'flex';
+        list.forEach((ev, index) => {
+            const item = document.createElement('div');
+            item.className = 'existing-event-item';
+            item.innerHTML = `
+                <span>${ev.title}</span>
+                <button class="delete-event-btn" data-index="${index}">✕ Delete</button>
+            `;
+            
+            item.querySelector('.delete-event-btn').addEventListener('click', (e) => {
+                const idx = parseInt(e.target.getAttribute('data-index'));
+                eventsData[dateStr].splice(idx, 1);
+                if (eventsData[dateStr].length === 0) {
+                    delete eventsData[dateStr];
+                }
+                
+                localStorage.setItem('lfp_calendar_events', JSON.stringify(eventsData));
+
+                renderExistingEvents(dateStr);
+                renderCalendar();
+            });
+
+            existingEventsContainer.appendChild(item);
+        });
+    }
+
+    dateInput.addEventListener('change', (e) => {
+        selectedDateStr = e.target.value;
+        renderExistingEvents(selectedDateStr);
+    });
+
+    prevBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+    });
+
+    nextBtn.addEventListener('click', () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
+    });
+
+    calAddBtn.addEventListener('click', () => {
+        const year = currentDate.getFullYear();
+        const mm = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(currentDate.getDate()).padStart(2, '0');
+        selectedDateStr = `${year}-${mm}-${dd}`;
+        dateInput.value = selectedDateStr;
+        titleInput.value = '';
+        renderExistingEvents(selectedDateStr);
+        openModal();
+    });
+
+    function openModal() {
+        modal.classList.add('active');
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+
+    saveEventBtn.addEventListener('click', () => {
+        const targetDate = dateInput.value;
+        const title = titleInput.value.trim();
+        const type = typeInput.value;
+
+        if (targetDate && title) {
+            if (!eventsData[targetDate]) {
+                eventsData[targetDate] = [];
+            }
+            eventsData[targetDate].push({ title, type });
+            
+            localStorage.setItem('lfp_calendar_events', JSON.stringify(eventsData));
+
+            closeModal();
+            renderCalendar();
+        }
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    renderCalendar();
+</script>
+</body>
+</html>

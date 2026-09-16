@@ -1,0 +1,1062 @@
+<!-- FIX THE HEADER I JUST CANT FIX IT AND ITS 2AM IN THE MORNING I GOTTA TAKE A BREAK I USED COMMENTS AND MAKE THEM SIMPLE SO YOU CAN EDIT
+ IT AND UNDERSTAND EASY-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumen Fret Path - Guitar Quizzes</title>
+    <style>
+        /* global reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* body background */
+        body {
+            background-color: #f7f7fa;
+            color: #1e2022;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* main header */
+        .top-navbar {
+            background-color: transparent;
+            height: 80px;
+            padding: 0 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        /* brand logo image */
+        .brand-logo img {
+            height: 36px;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* navigation links */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            background-color: #f0f0f5;
+            padding: 4px;
+            border-radius: 30px;
+        }
+
+        /* nav item */
+        .nav-item {
+            padding: 8px 18px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #6c757d;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: #1e2022;
+        }
+
+        .nav-item.active {
+            background-color: #ffffff;
+            color: #1e2022;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        /* top actions */
+        .btn-action {
+            background-color: #212529;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-action:hover {
+            background-color: #343a40;
+        }
+
+        /* main content container */
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px 24px 60px 24px;
+            will-change: transform, opacity;
+        }
+
+        /* page slide animations */
+        .slide-in-right { animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .slide-in-left  { animation: slideInLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .slide-out-left { animation: slideOutLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .slide-out-right{ animation: slideOutRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        @keyframes slideInRight {
+            from { transform: translateX(80px); opacity: 0; filter: blur(4px); }
+            to   { transform: translateX(0); opacity: 1; filter: blur(0); }
+        }
+        @keyframes slideInLeft {
+            from { transform: translateX(-80px); opacity: 0; filter: blur(4px); }
+            to   { transform: translateX(0); opacity: 1; filter: blur(0); }
+        }
+        @keyframes slideOutLeft {
+            from { transform: translateX(0); opacity: 1; filter: blur(0); }
+            to   { transform: translateX(-80px); opacity: 0; filter: blur(4px); }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; filter: blur(0); }
+            to   { transform: translateX(80px); opacity: 0; filter: blur(4px); }
+        }
+
+        /* page header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 32px;
+        }
+
+        .header-title h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1e2022;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            color: #8c98a4;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        /* content layout grid */
+        .content-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 28px;
+        }
+
+        /* left feature card */
+        .feature-card {
+            background: linear-gradient(145deg, #e4d5ff 0%, #d8b4fe 100%);
+            border-radius: 32px;
+            padding: 36px 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 460px;
+            box-shadow: 0 12px 30px rgba(216, 180, 254, 0.25);
+        }
+
+        .feature-card h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: #2e1065;
+            line-height: 1.2;
+        }
+
+        .feature-card p {
+            color: #581c87;
+            font-size: 13.5px;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .feature-btn {
+            background-color: #212529;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            align-self: flex-start;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* feature mini card */
+        .feature-mini-card {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            margin-top: auto;
+        }
+
+        .feature-mini-card h4 {
+            font-size: 14px;
+            color: #1e2022;
+            font-weight: 700;
+        }
+
+        .feature-mini-card p {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        /* quiz grid */
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        /* quiz card */
+        .quiz-card {
+            background-color: #ffffff;
+            border-radius: 28px;
+            padding: 28px;
+            border: 1px solid #edf2f7;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.05);
+            border-color: #e9d5ff;
+        }
+
+        .quiz-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .quiz-tag {
+            font-size: 11px;
+            font-weight: 700;
+            color: #7b2cbf;
+            background-color: #f3e8ff;
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+
+        .quiz-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1e2022;
+            margin-bottom: 8px;
+        }
+
+        .quiz-card p {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .start-btn {
+            background-color: #f8f9fc;
+            color: #1e2022;
+            border: 1px solid #edf2f7;
+            padding: 10px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 13px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-card:hover .start-btn {
+            background-color: #7b2cbf;
+            color: #ffffff;
+            border-color: #7b2cbf;
+        }
+
+        /* modal overlay */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000; justify-content: center; align-items: center;
+            opacity: 0;
+            transition: opacity 0.15s linear;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* modal content */
+        .modal-content {
+            background-color: #ffffff; padding: 36px;
+            border-radius: 28px; width: 90%; max-width: 560px;
+            max-height: 85vh; overflow-y: auto; position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); color: #1e2022;
+            border: 1px solid #edf2f7;
+        }
+
+        .modal-content h2 {
+            color: #1e2022; margin-bottom: 4px;
+            font-size: 22px; font-weight: 800;
+        }
+
+        .modal-subtitle {
+            font-size: 12px; color: #7b2cbf;
+            margin-bottom: 20px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        /* close button */
+        .close-btn {
+            position: absolute; top: 20px; right: 20px;
+            font-size: 18px; cursor: pointer; color: #64748b;
+            border: none; background: #f1f5f9; width: 32px; height: 32px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            transition: background-color 0.15s ease;
+        }
+
+        .close-btn:hover {
+            color: #1e2022; background-color: #e2e8f0;
+        }
+
+        /* KAHOOT STEP CARDS */
+        .question-card {
+            display: none;
+        }
+        .question-card.active-question {
+            display: block;
+        }
+
+        .question-progress {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .quiz-questions p {
+            margin-bottom: 16px; 
+            font-weight: 800;
+            font-size: 16px; 
+            color: #1e2022;
+            line-height: 1.4;
+        }
+
+        .kahoot-options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .quiz-questions label {
+            display: flex; 
+            align-items: center; 
+            gap: 14px;
+            padding: 16px 20px; 
+            border-radius: 16px;
+            cursor: pointer; 
+            font-size: 14px; 
+            font-weight: 700;
+            color: #ffffff;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+            transition: transform 0.1s ease, filter 0.1s ease;
+        }
+
+        .quiz-questions label:hover {
+            filter: brightness(1.08);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-questions label:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        /* Kahoot Colors for Options */
+        .quiz-questions label:nth-of-type(1) { background-color: #e21b3c; } /* Red */
+        .quiz-questions label:nth-of-type(2) { background-color: #1368ce; } /* Blue */
+        .quiz-questions label:nth-of-type(3) { background-color: #d89e00; } /* Yellow/Orange */
+
+        .quiz-questions input[type="radio"] {
+            accent-color: #ffffff; 
+            width: 18px; 
+            height: 18px; 
+            cursor: pointer;
+        }
+
+        /* audio button */
+        .audio-btn {
+            background-color: #f3e8ff; color: #7b2cbf; border: 1px solid #e9d5ff;
+            padding: 10px 16px; border-radius: 12px; font-weight: 700;
+            cursor: pointer; margin-bottom: 16px; font-size: 13px;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+
+        .audio-btn:hover {
+            background-color: #e9d5ff;
+        }
+
+        /* quiz navigation buttons inside cards */
+        .quiz-nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .quiz-nav-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.15s ease;
+        }
+
+        .btn-prev {
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+        .btn-prev:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-next, .submit-quiz-btn {
+            background-color: #212529;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .btn-next:hover, .submit-quiz-btn:hover {
+            background-color: #343a40;
+        }
+
+        /* quiz result box */
+        .quiz-result {
+            margin-top: 18px; font-weight: 700; font-size: 13.5px;
+            text-align: center; padding: 12px; border-radius: 14px;
+            display: none;
+        }
+
+        .quiz-result.visible {
+            display: block;
+        }
+
+        /* responsive breakpoints */
+        @media (max-width: 992px) {
+            .content-layout { grid-template-columns: 1fr; }
+            .feature-card { min-height: auto; }
+            .quiz-grid { grid-template-columns: 1fr; }
+            .top-navbar { padding: 0 20px; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- main header -->
+    <header class="top-navbar">
+        <div class="brand-logo">
+            <a href="dashboard.html">
+                <img src="lfplogo.png" alt="Lumen Fret Path Logo">
+            </a>
+        </div>
+
+        <nav class="nav-links">
+            <a href="dashboard.html" class="nav-item">Dashboard</a>
+            <a href="lessons.html" class="nav-item">Lessons</a>
+            <a href="quiz.html" class="nav-item active">Quizzes</a>
+            <a href="community.html" class="nav-item">Community</a>
+    
+        </nav>
+
+        <div class="top-actions">
+            <button class="btn-action">✦ Take Practice</button>
+        </div>
+    </header>
+
+    <!-- main content -->
+    <main id="main-content">
+        <div class="page-header">
+            <div class="header-title">
+                <h1>Guitar Knowledge Quizzes</h1>
+                <p>Test your knowledge, ear pitch, and chord fundamentals.</p>
+            </div>
+        </div>
+
+        <div class="content-layout">
+            <div class="feature-card">
+                <div>
+                    <h2>Weekly Ear Training Challenge</h2>
+                    <p>Improve your pitch accuracy and chord identification with guided audio evaluations.</p>
+                    <button class="feature-btn">Start Test</button>
+                </div>
+
+                <div class="feature-mini-card">
+                    <h4>Next Milestone</h4>
+                    <p>Complete Quiz 4 & 5 to unlock Ear Master Level 1 Badge.</p>
+                </div>
+            </div>
+
+            <div class="quiz-grid">
+                <div class="quiz-card" data-modal="quiz-modal-1">
+                    <div>
+                        <div class="quiz-card-header">
+                            <span class="quiz-tag">Anatomy</span>
+                        </div>
+                        <h3>Quiz 1: Guitar Parts</h3>
+                        <p>Test your knowledge on guitar parts, tuning components, and proper fretting posture.</p>
+                    </div>
+                    <div class="start-btn">Start Quiz</div>
+                </div>
+
+                <div class="quiz-card" data-modal="quiz-modal-2">
+                    <div>
+                        <div class="quiz-card-header">
+                            <span class="quiz-tag">Rhythm</span>
+                        </div>
+                        <h3>Quiz 2: Strumming</h3>
+                        <p>Evaluate your understanding of pick control, wrist dynamics, and rhythm patterns.</p>
+                    </div>
+                    <div class="start-btn">Start Quiz</div>
+                </div>
+
+                <div class="quiz-card" data-modal="quiz-modal-3">
+                    <div>
+                        <div class="quiz-card-header">
+                            <span class="quiz-tag">Harmony</span>
+                        </div>
+                        <h3>Quiz 3: Chords</h3>
+                        <p>Review chord diagrams, open string configurations, and essential fingerings.</p>
+                    </div>
+                    <div class="start-btn">Start Quiz</div>
+                </div>
+
+                <div class="quiz-card" data-modal="quiz-modal-4">
+                    <div>
+                        <div class="quiz-card-header">
+                            <span class="quiz-tag">Ear Training</span>
+                        </div>
+                        <h3>Quiz 4: Pitch Test</h3>
+                        <p>Listen to generated reference pitch pairs and identify higher or lower frequencies.</p>
+                    </div>
+                    <div class="start-btn">Start Quiz</div>
+                </div>
+
+                <div class="quiz-card" data-modal="quiz-modal-5">
+                    <div>
+                        <div class="quiz-card-header">
+                            <span class="quiz-tag">Listening</span>
+                        </div>
+                        <h3>Quiz 5: Tone Match</h3>
+                        <p>Train your ear to determine whether two audio reference tones match identically.</p>
+                    </div>
+                    <div class="start-btn">Start Quiz</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- quiz modal 1 -->
+    <div id="quiz-modal-1" class="modal" data-quiz-id="1">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <h2>Quiz 1: Guitar Anatomy</h2>
+            <div class="modal-subtitle">Basic Instrument Knowledge</div>
+            <form class="quiz-form">
+                <div class="quiz-questions">
+                    <!-- Card 1 -->
+                    <div class="question-card active-question" data-step="1">
+                        <div class="question-progress">Question 1 of 3</div>
+                        <p>What part of the guitar holds the tuning pegs?</p>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q1_1" value="a"> The Bridge</label>
+                            <label><input type="radio" name="q1_1" value="b"> The Headstock</label>
+                            <label><input type="radio" name="q1_1" value="c"> The Nut</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-next" onclick="nextQuestion(this)">Next ➔</button>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="question-card" data-step="2">
+                        <div class="question-progress">Question 2 of 3</div>
+                        <p>Which string is the thickest and lowest in pitch?</p>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q1_2" value="a"> 6th String (Low E)</label>
+                            <label><input type="radio" name="q1_2" value="b"> 1st String (High E)</label>
+                            <label><input type="radio" name="q1_2" value="c"> 3rd String (G)</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-prev" onclick="prevQuestion(this)">⬅ Back</button>
+                            <button type="button" class="quiz-nav-btn btn-next" onclick="nextQuestion(this)">Next ➔</button>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="question-card" data-step="3">
+                        <div class="question-progress">Question 3 of 3</div>
+                        <p>Where should your thumb be placed when fretting?</p>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q1_3" value="a"> Wrapped over the top of the neck</label>
+                            <label><input type="radio" name="q1_3" value="b"> Behind the neck for leverage</label>
+                            <label><input type="radio" name="q1_3" value="c"> Resting on the body</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-prev" onclick="prevQuestion(this)">⬅ Back</button>
+                            <button type="button" class="quiz-nav-btn submit-quiz-btn" onclick="checkQuiz(1)">Submit Quiz</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div id="quiz-result-1" class="quiz-result"></div>
+        </div>
+    </div>
+
+    <!-- quiz modal 2 -->
+    <div id="quiz-modal-2" class="modal" data-quiz-id="2">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <h2>Quiz 2: Strumming & Rhythm</h2>
+            <div class="modal-subtitle">Time Keeping & Pick Control</div>
+            <form class="quiz-form">
+                <div class="quiz-questions">
+                    <!-- Card 1 -->
+                    <div class="question-card active-question" data-step="1">
+                        <div class="question-progress">Question 1 of 3</div>
+                        <p>How much of the pick tip should be visible when holding it?</p>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q2_1" value="a"> About 1 inch</label>
+                            <label><input type="radio" name="q2_1" value="b"> About a quarter inch (0.5cm)</label>
+                            <label><input type="radio" name="q2_1" value="c"> None of it</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-next" onclick="nextQuestion(this)">Next ➔</button>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="question-card" data-step="2">
+                        <div class="question-progress">Question 2 of 3</div>
+                        <p>Where should your strumming motion primarily come from?</p>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q2_2" value="a"> A stiff elbow</label>
+                            <label><input type="radio" name="q2_2" value="b"> A loose, rotating wrist</label>
+                            <label><input type="radio" name="q2_2" value="c"> Your shoulder</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-prev" onclick="prevQuestion(this)">⬅ Back</button>
+                            <button type="button" class="quiz-nav-btn btn-next" onclick="nextQuestion(this)">Next ➔</button>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="question-card" data-step="3">
+                        <div class="question-progress">Question 3 of 3</div>
+                        <p>What is the motion for "Alternating Eighths"?</p>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q2_3" value="a"> Down, Down, Down, Down</label>
+                            <label><input type="radio" name="q2_3" value="b"> Down, Up, Down, Up (stopping between)</label>
+                            <label><input type="radio" name="q2_3" value="c"> Down-Up, Down-Up, Down-Up, Down-Up</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-prev" onclick="prevQuestion(this)">⬅ Back</button>
+                            <button type="button" class="quiz-nav-btn submit-quiz-btn" onclick="checkQuiz(2)">Submit Quiz</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div id="quiz-result-2" class="quiz-result"></div>
+        </div>
+    </div>
+
+    <!-- quiz modal 3 -->
+    <div id="quiz-modal-3" class="modal" data-quiz-id="3">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <h2>Quiz 3: Chord Structures</h2>
+            <div class="modal-subtitle">Open Positions & Fingerings</div>
+            <form class="quiz-form">
+                <div class="quiz-questions">
+                    <!-- Card 1 -->
+                    <div class="question-card active-question" data-step="1">
+                        <div class="question-progress">Question 1 of 3</div>
+                        <p>When reading chord charts, which finger is numbered "1"?</p>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q3_1" value="a"> Index Finger</label>
+                            <label><input type="radio" name="q3_1" value="b"> Thumb</label>
+                            <label><input type="radio" name="q3_1" value="c"> Middle Finger</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-next" onclick="nextQuestion(this)">Next ➔</button>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="question-card" data-step="2">
+                        <div class="question-progress">Question 2 of 3</div>
+                        <p>How many strings should you strum for a C Major chord?</p>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q3_2" value="a"> All 6 strings</label>
+                            <label><input type="radio" name="q3_2" value="b"> Bottom 5 strings</label>
+                            <label><input type="radio" name="q3_2" value="c"> Bottom 4 strings</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-prev" onclick="prevQuestion(this)">⬅ Back</button>
+                            <button type="button" class="quiz-nav-btn btn-next" onclick="nextQuestion(this)">Next ➔</button>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="question-card" data-step="3">
+                        <div class="question-progress">Question 3 of 3</div>
+                        <p>Which chord uses finger 2 on string 5 (fret 2) and finger 3 on string 4 (fret 2)?</p>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q3_3" value="a"> E Minor (Em)</label>
+                            <label><input type="radio" name="q3_3" value="b"> G Major (G)</label>
+                            <label><input type="radio" name="q3_3" value="c"> D Major (D)</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-prev" onclick="prevQuestion(this)">⬅ Back</button>
+                            <button type="button" class="quiz-nav-btn submit-quiz-btn" onclick="checkQuiz(3)">Submit Quiz</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div id="quiz-result-3" class="quiz-result"></div>
+        </div>
+    </div>
+
+    <!-- quiz modal 4 -->
+    <div id="quiz-modal-4" class="modal" data-quiz-id="4">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <h2>Quiz 4: Ear Pitch Assessment</h2>
+            <div class="modal-subtitle">Auditory Recognition</div>
+            <form class="quiz-form">
+                <div class="quiz-questions">
+                    <!-- Card 1 -->
+                    <div class="question-card active-question" data-step="1">
+                        <div class="question-progress">Question 1 of 3</div>
+                        <p>1. Listen to Tone A and Tone B. Is Tone B higher or lower?</p>
+                        <button type="button" class="audio-btn" onclick="playPair(440, 466)">▶ Play Reference Tones</button>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q4_1" value="higher"> Tone B is Higher</label>
+                            <label><input type="radio" name="q4_1" value="lower"> Tone B is Lower</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-next" onclick="nextQuestion(this)">Next ➔</button>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="question-card" data-step="2">
+                        <div class="question-progress">Question 2 of 3</div>
+                        <p>2. Listen to Tone A and Tone B. Is Tone B higher or lower?</p>
+                        <button type="button" class="audio-btn" onclick="playPair(330, 293)">▶ Play Reference Tones</button>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q4_2" value="higher"> Tone B is Higher</label>
+                            <label><input type="radio" name="q4_2" value="lower"> Tone B is Lower</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-prev" onclick="prevQuestion(this)">⬅ Back</button>
+                            <button type="button" class="quiz-nav-btn btn-next" onclick="nextQuestion(this)">Next ➔</button>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="question-card" data-step="3">
+                        <div class="question-progress">Question 3 of 3</div>
+                        <p>3. Listen to Tone A and Tone B. Is Tone B higher or lower?</p>
+                        <button type="button" class="audio-btn" onclick="playPair(220, 233)">▶ Play Reference Tones</button>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q4_3" value="higher"> Tone B is Higher</label>
+                            <label><input type="radio" name="q4_3" value="lower"> Tone B is Lower</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-prev" onclick="prevQuestion(this)">⬅ Back</button>
+                            <button type="button" class="quiz-nav-btn submit-quiz-btn" onclick="checkQuiz(4)">Submit Quiz</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div id="quiz-result-4" class="quiz-result"></div>
+        </div>
+    </div>
+
+    <!-- quiz modal 5 -->
+    <div id="quiz-modal-5" class="modal" data-quiz-id="5">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <h2>Quiz 5: Tone Matching</h2>
+            <div class="modal-subtitle">Frequency Discrimination</div>
+            <form class="quiz-form">
+                <div class="quiz-questions">
+                    <!-- Card 1 -->
+                    <div class="question-card active-question" data-step="1">
+                        <div class="question-progress">Question 1 of 3</div>
+                        <p>1. Are Tone A and Tone B identical or different?</p>
+                        <button type="button" class="audio-btn" onclick="playPair(440, 440)">▶ Play Reference Tones</button>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q5_1" value="same"> Same Tone</label>
+                            <label><input type="radio" name="q5_1" value="different"> Different Tones</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-next" onclick="nextQuestion(this)">Next ➔</button>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="question-card" data-step="2">
+                        <div class="question-progress">Question 2 of 3</div>
+                        <p>2. Are Tone A and Tone B identical or different?</p>
+                        <button type="button" class="audio-btn" onclick="playPair(350, 365)">▶ Play Reference Tones</button>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q5_2" value="same"> Same Tone</label>
+                            <label><input type="radio" name="q5_2" value="different"> Different Tones</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-prev" onclick="prevQuestion(this)">⬅ Back</button>
+                            <button type="button" class="quiz-nav-btn btn-next" onclick="nextQuestion(this)">Next ➔</button>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="question-card" data-step="3">
+                        <div class="question-progress">Question 3 of 3</div>
+                        <p>3. Are Tone A and Tone B identical or different?</p>
+                        <button type="button" class="audio-btn" onclick="playPair(523, 523)">▶ Play Reference Tones</button>
+                        <div class="kahoot-options-grid">
+                            <label><input type="radio" name="q5_3" value="same"> Same Tone</label>
+                            <label><input type="radio" name="q5_3" value="different"> Different Tones</label>
+                        </div>
+                        <div class="quiz-nav-buttons">
+                            <button type="button" class="quiz-nav-btn btn-prev" onclick="prevQuestion(this)">⬅ Back</button>
+                            <button type="button" class="quiz-nav-btn submit-quiz-btn" onclick="checkQuiz(5)">Submit Quiz</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div id="quiz-result-5" class="quiz-result"></div>
+        </div>
+    </div>
+
+    <script>
+    /* page sequence */
+    const PAGE_SEQUENCE = [
+        "dashboard.html",
+        "lessons.html",
+        "quiz.html",
+        "vid.html",
+        "community.html",
+        "f1.html"
+    ];
+
+    /* slide transitions and handlers */
+    document.addEventListener("DOMContentLoaded", () => {
+        const currentPath = window.location.pathname.split("/").pop() || "quiz.html";
+        const currentIndex = PAGE_SEQUENCE.indexOf(currentPath);
+        const prevIndex = parseInt(sessionStorage.getItem("prevPageIndex"), 10);
+        const mainEl = document.getElementById("main-content");
+
+        if (!isNaN(prevIndex) && prevIndex !== currentIndex) {
+            if (currentIndex > prevIndex) {
+                mainEl.classList.add("slide-in-right");
+            } else {
+                mainEl.classList.add("slide-in-left");
+            }
+        }
+        sessionStorage.setItem("prevPageIndex", currentIndex);
+
+        document.querySelectorAll(".nav-item").forEach(link => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                const targetUrl = link.getAttribute("href");
+                const targetIndex = PAGE_SEQUENCE.indexOf(targetUrl);
+
+                if (targetIndex === currentIndex || targetIndex === -1) {
+                    window.location.href = targetUrl;
+                    return;
+                }
+
+                if (targetIndex > currentIndex) {
+                    mainEl.classList.add("slide-out-left");
+                } else {
+                    mainEl.classList.add("slide-out-right");
+                }
+
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 300);
+            });
+        });
+
+        document.querySelectorAll(".quiz-card").forEach(card => {
+            card.addEventListener("click", () => {
+                const targetModal = document.getElementById(card.dataset.modal);
+                if (targetModal) openModal(targetModal);
+            });
+        });
+
+        document.querySelectorAll(".close-btn").forEach(btn => {
+            btn.addEventListener("click", e => {
+                const modal = e.target.closest(".modal");
+                if (modal) closeModal(modal);
+            });
+        });
+
+        window.addEventListener("click", e => {
+            if (e.target.classList.contains("modal")) {
+                closeModal(e.target);
+            }
+        });
+    });
+
+    /* modal open */
+    function openModal(modal) {
+        modal.classList.add("active");
+        resetQuizModal(modal);
+    }
+
+    /* modal close */
+    function closeModal(modal) {
+        modal.classList.remove("active");
+        resetQuizModal(modal);
+    }
+
+    /* reset quiz modal cards back to step 1 */
+    function resetQuizModal(modal) {
+        const cards = modal.querySelectorAll(".question-card");
+        cards.forEach((card, idx) => {
+            if (idx === 0) {
+                card.classList.add("active-question");
+            } else {
+                card.classList.remove("active-question");
+            }
+        });
+        const form = modal.querySelector(".quiz-form");
+        if (form) form.reset();
+
+        const resultDiv = modal.querySelector(".quiz-result");
+        if (resultDiv) {
+            resultDiv.innerText = "";
+            resultDiv.classList.remove("visible");
+        }
+    }
+
+    /* Kahoot card step navigations */
+    function nextQuestion(btn) {
+        const currentCard = btn.closest(".question-card");
+        const nextCard = currentCard.nextElementSibling;
+        if (nextCard && nextCard.classList.contains("question-card")) {
+            currentCard.classList.remove("active-question");
+            nextCard.classList.add("active-question");
+        }
+    }
+
+    function prevQuestion(btn) {
+        const currentCard = btn.closest(".question-card");
+        const prevCard = currentCard.previousElementSibling;
+        if (prevCard && prevCard.classList.contains("question-card")) {
+            currentCard.classList.remove("active-question");
+            prevCard.classList.add("active-question");
+        }
+    }
+
+    /* audio tone generator context */
+    let audioCtx = null;
+    function getAudioContext() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    /* play single tone */
+    function playTone(freq, startTime, duration) {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(0.3, startTime + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration - 0.05);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+    }
+
+    /* play reference tone pair */
+    function playPair(freqA, freqB) {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+        playTone(freqA, now, 0.8);
+        playTone(freqB, now + 1.0, 0.8);
+    }
+
+    /* quiz answers mapping */
+    const correctAnswers = {
+        1: { q1_1: 'b', q1_2: 'a', q1_3: 'b' },
+        2: { q2_1: 'b', q2_2: 'b', q2_3: 'c' },
+        3: { q3_1: 'a', q3_2: 'b', q3_3: 'a' },
+        4: { q4_1: 'higher', q4_2: 'lower', q4_3: 'higher' },
+        5: { q5_1: 'same', q5_2: 'different', q5_3: 'same' }
+    };
+
+    /* check quiz results */
+    function checkQuiz(quizId) {
+        let score = 0;
+        const answers = correctAnswers[quizId];
+        const totalQuestions = Object.keys(answers).length;
+
+        for (let questionName in answers) {
+            const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+            if (selected && selected.value === answers[questionName]) {
+                score++;
+            }
+        }
+
+        const modal = document.getElementById(`quiz-modal-${quizId}`);
+        const resultDiv = document.getElementById(`quiz-result-${quizId}`);
+        const isPerfect = score === totalQuestions;
+        
+        resultDiv.style.color = isPerfect ? "#047857" : "#b91c1c";
+        resultDiv.style.backgroundColor = isPerfect ? "#d1fae5" : "#fee2e2";
+        resultDiv.style.border = isPerfect ? "1px solid #a7f3d0" : "1px solid #fca5a5";
+        resultDiv.innerText = isPerfect 
+            ? `Excellent! You scored ${score}/${totalQuestions}. Quiz Passed!`
+            : `You scored ${score}/${totalQuestions}. Review material and try again.`;
+            
+        resultDiv.classList.add("visible");
+    }
+    </script>
+</body>
+</html>
